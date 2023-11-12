@@ -1,38 +1,31 @@
 import React from "react"
-import { Breadcrumb, Button, Layout, theme } from "antd"
-import { NavLink, Outlet } from "react-router-dom"
+import { Layout, Space } from "antd"
+import { Outlet } from "react-router-dom"
 import { PAGE_PRODUCTS } from "../common/constants"
+import HeaderNavLink from "../Components/NavLink"
 
 const { Header, Content, Footer } = Layout
 
 const Main: React.FC = () => {
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken()
-
   return (
-    <Layout>
+    <Layout
+      style={{
+        display: "grid",
+        gridTemplateRows: "70px auto 70px",
+        minHeight: "97vh",
+      }}
+    >
       <Header style={{ display: "flex", alignItems: "center" }}>
-        <nav>
-          <NavLink to={`/${PAGE_PRODUCTS}`}>
-            {({ isActive }) => (
-              <Button type={isActive ? "primary" : "default"}>Products</Button>
-            )}
-          </NavLink>
-        </nav>
+        <Space size={"middle"}>
+          <HeaderNavLink to={"."} title="Home"></HeaderNavLink>
+          <HeaderNavLink
+            to={`/${PAGE_PRODUCTS}`}
+            title="Products"
+          ></HeaderNavLink>
+        </Space>
       </Header>
-      <Content style={{ padding: "0 50px" }}>
-        <Breadcrumb style={{ margin: "16px 0" }}>
-          <Breadcrumb.Item>Home</Breadcrumb.Item>
-          <Breadcrumb.Item>List</Breadcrumb.Item>
-          <Breadcrumb.Item>App</Breadcrumb.Item>
-        </Breadcrumb>
-        <div
-          className="site-layout-content"
-          style={{ background: colorBgContainer }}
-        >
-          <Outlet />
-        </div>
+      <Content style={{ padding: "0 50px", height: "100%" }}>
+        <Outlet />
       </Content>
       <Footer style={{ textAlign: "center" }}>Yauheni Herasimenka ©2023</Footer>
     </Layout>

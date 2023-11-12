@@ -4,6 +4,7 @@ import { IProduct } from "../types/product"
 import { List, Image, Space } from "antd"
 import { DollarOutlined, StarOutlined } from "@ant-design/icons"
 import ProductsPagination from "../Components/ProductsPagination"
+import { Link } from "react-router-dom"
 // import { usePagination } from "../hooks/usePagination"
 // import { useSearchParams } from "react-router-dom"
 
@@ -50,7 +51,9 @@ const Product = () => {
             ]}
             extra={<Image height={272} alt={item.title} src={item.image} />}
           >
-            <List.Item.Meta title={<a href="#">{item.title}</a>} />
+            <List.Item.Meta
+              title={<Link to={`./${item.id}`}>{item.title}</Link>}
+            />
             {item.description}
           </List.Item>
         )}

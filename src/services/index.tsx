@@ -2,10 +2,17 @@ import axios from "axios"
 import { IProduct } from "../types/product"
 
 export const getProducts = async () => {
-  const all = await axios.get<IProduct[]>(
+  const { data } = await axios.get<IProduct[]>(
     "https://fakestoreapi.com/products?limit=6"
   )
-  console.log("🚀 ~ file: index.tsx:8 ~ getProducts ~ all:", all)
 
-  return all.data
+  return data
+}
+
+export const getProduct = async (id: number) => {
+  const { data } = await axios.get<IProduct>(
+    `https://fakestoreapi.com/products/${id}`
+  )
+
+  return data
 }
