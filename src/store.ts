@@ -12,6 +12,8 @@ import {
   REGISTER,
 } from "redux-persist"
 import storage from "redux-persist/lib/storage" // defaults to localStorage for web
+import authSlice from "./features/auth/authSlice"
+import { authApi } from "./services/auth"
 
 const persistConfig = {
   key: "root",
@@ -20,18 +22,23 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   product: productSlice,
+  auth: authSlice,
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 export const store = configureStore({
-  reducer: { persistedReducer, [productApi.reducerPath]: productApi.reducer },
+  reducer: {
+    persistedReducer,
+    [productApi.reducerPath]: productApi.reducer,
+    [authApi.reducerPath]: authApi.reducer,
+  },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(productApi.middleware),
+    }).concat(productApi.middleware, authApi.middleware),
 })
 
 export type RootState = ReturnType<typeof store.getState>

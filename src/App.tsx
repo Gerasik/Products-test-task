@@ -6,6 +6,7 @@ import Home from "./page/Home"
 import Item from "./page/Item"
 import Create from "./page/Create"
 import Edit from "./page/Edit"
+import Login from "./page/Login"
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
       { path: `/${PAGE_PRODUCTS}/:id`, element: <Item /> },
       { path: `/${PAGE_PRODUCTS}/edit/:id`, element: <Edit /> },
     ],
+  },
+  {
+    path: "/login",
+    element: <Login />,
   },
 ])
 
