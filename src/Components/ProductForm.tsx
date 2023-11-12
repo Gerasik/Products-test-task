@@ -1,14 +1,15 @@
 import { Button, Form, Input, InputNumber, Spin, Switch } from "antd"
 import { ICreatedProduct } from "../types/product"
+import TextArea from "antd/es/input/TextArea"
 
-const ProductForm = ({
+const ProductForm = <T,>({
   isLoading,
   onFinish,
   initialValues,
 }: {
   isLoading: boolean
   initialValues?: ICreatedProduct
-  onFinish: () => void
+  onFinish: (values: T) => void
 }) => {
   return (
     <Spin tip="Creating..." spinning={isLoading}>
@@ -35,7 +36,7 @@ const ProductForm = ({
           initialValue={initialValues?.description || ""}
           rules={[{ required: true, message: "Please input description!" }]}
         >
-          <Input />
+          <TextArea rows={2} />
         </Form.Item>
         <Form.Item
           label="Price"
@@ -49,7 +50,7 @@ const ProductForm = ({
           label="Published"
           name="published"
           valuePropName="checked"
-          initialValue={!!initialValues?.description}
+          initialValue={!!initialValues?.published}
         >
           <Switch />
         </Form.Item>

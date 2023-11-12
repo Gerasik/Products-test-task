@@ -1,7 +1,7 @@
 import { createElement, useState } from "react"
 import { List, Image, Space, Select, Button } from "antd"
 import { DollarOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import { PaginationConfig } from "antd/es/pagination"
 import { useSelector } from "react-redux"
 import { RootState } from "../store"
@@ -30,6 +30,7 @@ const IconButton = ({
 )
 
 const CreatedProducts = () => {
+  const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const createdProducts = useSelector(
     (state: RootState) => state.persistedReducer.product.createdProducts
@@ -41,7 +42,11 @@ const CreatedProducts = () => {
     <List
       itemLayout="vertical"
       size="large"
-      dataSource={createdProducts}
+      dataSource={
+        searchParams.get("create") === "published"
+          ? createdProducts.filter((i) => i.published)
+          : createdProducts
+      }
       pagination={paginationConfig}
       footer={
         <Space>

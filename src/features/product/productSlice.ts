@@ -23,6 +23,12 @@ export const productSlice = createSlice({
     addCreatedProduct: (state, action: PayloadAction<ICreatedProduct>) => {
       state.createdProducts = [...state.createdProducts, action.payload]
     },
+    updateCreatedProduct: (state, action: PayloadAction<ICreatedProduct>) => {
+      state.createdProducts = updateElementById(
+        state.createdProducts,
+        action.payload
+      )
+    },
   },
   extraReducers: (builder) => {
     builder.addMatcher(
@@ -34,6 +40,20 @@ export const productSlice = createSlice({
   },
 })
 
-export const { setProducts, addCreatedProduct } = productSlice.actions
+export const { setProducts, addCreatedProduct, updateCreatedProduct } =
+  productSlice.actions
 
 export default productSlice.reducer
+
+function updateElementById<T extends { id: number }>(
+  array: T[],
+  newData: T
+): T[] {
+  const index = array.findIndex((element) => element.id === newData.id)
+
+  if (index !== -1) {
+    array[index] = { ...array[index], ...newData }
+  }
+
+  return array
+}

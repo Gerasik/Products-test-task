@@ -18,6 +18,22 @@ export const productApi = createApi({
         body: data,
       }),
     }),
+    updateProduct: builder.mutation<
+      Omit<IProduct, "rating">,
+      IProductPostData & { id: number }
+    >({
+      query: ({ id, ...data }) => ({
+        url: `/${id}`,
+        method: "PUT",
+        body: data,
+      }),
+    }),
+    deleteProduct: builder.mutation<Omit<IProduct, "rating">, { id: number }>({
+      query: ({ id }) => ({
+        url: `/${id}`,
+        method: "DELETE",
+      }),
+    }),
   }),
 })
 
@@ -25,4 +41,6 @@ export const {
   useGetProductsQuery,
   useGetProductByIDQuery,
   useAddProductMutation,
+  useUpdateProductMutation,
+  useDeleteProductMutation,
 } = productApi
