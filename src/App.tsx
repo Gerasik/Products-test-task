@@ -8,26 +8,29 @@ import Create from "./page/Create"
 import Edit from "./page/Edit"
 import Login from "./page/Login"
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Main />,
-    children: [
-      { path: "", element: <Home /> },
-      {
-        path: `/${PAGE_PRODUCTS}`,
-        element: <Product />,
-      },
-      { path: `/${PAGE_CREATE}`, element: <Create /> },
-      { path: `/${PAGE_PRODUCTS}/:id`, element: <Item /> },
-      { path: `/${PAGE_PRODUCTS}/edit/:id`, element: <Edit /> },
-    ],
-  },
-  {
-    path: "/login",
-    element: <Login />,
-  },
-])
+const router = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: <Main />,
+      children: [
+        { path: "", element: <Home /> },
+        {
+          path: `/${PAGE_PRODUCTS}`,
+          element: <Product />,
+        },
+        { path: `/${PAGE_CREATE}`, element: <Create /> },
+        { path: `/${PAGE_PRODUCTS}/:id`, element: <Item /> },
+        { path: `/${PAGE_PRODUCTS}/edit/:id`, element: <Edit /> },
+      ],
+    },
+    {
+      path: "/login",
+      element: <Login />,
+    },
+  ],
+  { basename: "/Products-test-task" }
+)
 
 function App() {
   return <RouterProvider router={router} />
