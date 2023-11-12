@@ -1,9 +1,15 @@
-import { Flex, Typography, notification } from "antd"
-import { useUpdateProductMutation } from "../services/product"
+import { Flex, Modal, Typography, notification } from "antd"
+import {
+  useDeleteProductMutation,
+  useUpdateProductMutation,
+} from "../services/product"
 import { ICreatedProduct } from "../types/product"
 import { useAppDispatch } from "../hooks/store"
-import { updateCreatedProduct } from "../features/product/productSlice"
-import { useParams } from "react-router-dom"
+import {
+  deleteCreatedProduct,
+  updateCreatedProduct,
+} from "../features/product/productSlice"
+import { useNavigate, useParams } from "react-router-dom"
 import { useSelector } from "react-redux"
 import { RootState } from "../store"
 import { useEffect, useState } from "react"
@@ -13,10 +19,16 @@ const { Title } = Typography
 
 const Edit = () => {
   const dispatch = useAppDispatch()
+  const [isShowModal, setIsShowModal] = useState(false)
   const { id } = useParams<{ id: string }>()
   const createdProducts = useSelector(
     (state: RootState) => state.persistedReducer.product.createdProducts
   )
+  const navigate = useNavigate()
+
+  const [update, { isLoading }] = useUpdateProductMutation()
+  const [deleteProduct, { isLoading: isDeleteLoading }] =
+    useDeleteProductMutation()
 
   const [initialValues, setInitialValues] = useState<ICreatedProduct | null>(
     null
@@ -37,14 +49,18 @@ const Edit = () => {
     })
   }
 
+  const deleteNotification = (title: string) => {
+    notification.open({
+      message: `Product ${title} has been deleted`,
+    })
+  }
+
   const errorNotification = () => {
     notification.open({
       type: "error",
       message: `Api error`,
     })
   }
-
-  const [create, { isLoading }] = useUpdateProductMutation()
 
   const onFinish = async (
     values: Pick<
@@ -54,7 +70,7 @@ const Edit = () => {
   ) => {
     try {
       if (initialValues) {
-        const payload = await create({
+        const payload = await update({
           ...values,
           id: initialValues?.id,
           image: "https://i.pravatar.cc",
@@ -79,17 +95,57 @@ const Edit = () => {
     }
   }
 
+  const onDeleteClick = () => {
+    setIsShowModal(true)
+  }
+
+  const handleOk = async () => {
+    try {
+      if (initialValues) {
+        await deleteProduct({
+          id: initialValues.id,
+        }).unwrap()
+
+        dispatch(deleteCreatedProduct(initialValues))
+
+        deleteNotification(initialValues.title)
+        navigate(-1)
+      }
+    } catch (error) {
+      console.error(error)
+      errorNotification()
+    }
+    setIsShowModal(false)
+  }
+
+  const handleCancel = () => {
+    setIsShowModal(false)
+  }
+
   return (
-    <Flex vertical>
-      <Title>Edit Product</Title>
-      {initialValues && (
-        <ProductForm
-          onFinish={onFinish}
-          isLoading={isLoading}
-          initialValues={initialValues}
-        />
-      )}
-    </Flex>
+    <>
+      <Flex vertical>
+        <Title>Edit Product</Title>
+        {initialValues && (
+          <ProductForm
+            onFinish={onFinish}
+            isLoading={isLoading || isDeleteLoading}
+            initialValues={initialValues}
+            onDeleteClick={onDeleteClick}
+          />
+        )}
+      </Flex>
+      <Modal
+        title="Delete"
+        open={isShowModal}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        <p>
+          Are you sure you want to remove <b>{initialValues?.title}</b>?
+        </p>
+      </Modal>
+    </>
   )
 }
 

@@ -29,6 +29,11 @@ export const productSlice = createSlice({
         action.payload
       )
     },
+    deleteCreatedProduct: (state, action: PayloadAction<ICreatedProduct>) => {
+      state.createdProducts = state.createdProducts.filter(
+        (i) => i.id !== action.payload.id
+      )
+    },
   },
   extraReducers: (builder) => {
     builder.addMatcher(
@@ -40,8 +45,12 @@ export const productSlice = createSlice({
   },
 })
 
-export const { setProducts, addCreatedProduct, updateCreatedProduct } =
-  productSlice.actions
+export const {
+  setProducts,
+  addCreatedProduct,
+  updateCreatedProduct,
+  deleteCreatedProduct,
+} = productSlice.actions
 
 export default productSlice.reducer
 

@@ -1,4 +1,4 @@
-import { Button, Form, Input, InputNumber, Spin, Switch } from "antd"
+import { Button, Form, Input, InputNumber, Space, Spin, Switch } from "antd"
 import { ICreatedProduct } from "../types/product"
 import TextArea from "antd/es/input/TextArea"
 
@@ -6,10 +6,12 @@ const ProductForm = <T,>({
   isLoading,
   onFinish,
   initialValues,
+  onDeleteClick,
 }: {
   isLoading: boolean
   initialValues?: ICreatedProduct
   onFinish: (values: T) => void
+  onDeleteClick?: () => void
 }) => {
   return (
     <Spin tip="Creating..." spinning={isLoading}>
@@ -55,9 +57,16 @@ const ProductForm = <T,>({
           <Switch />
         </Form.Item>
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-          <Button type="primary" htmlType="submit" loading={isLoading}>
-            {initialValues ? "Save" : "Create"}
-          </Button>
+          <Space>
+            <Button type="primary" htmlType="submit" loading={isLoading}>
+              {initialValues ? "Save" : "Create"}
+            </Button>
+            {initialValues && (
+              <Button danger loading={isLoading} onClick={onDeleteClick}>
+                Delete
+              </Button>
+            )}
+          </Space>
         </Form.Item>
       </Form>
     </Spin>
