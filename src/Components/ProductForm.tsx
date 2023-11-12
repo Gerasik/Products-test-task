@@ -1,0 +1,66 @@
+import { Button, Form, Input, InputNumber, Spin, Switch } from "antd"
+import { ICreatedProduct } from "../types/product"
+
+const ProductForm = ({
+  isLoading,
+  onFinish,
+  initialValues,
+}: {
+  isLoading: boolean
+  initialValues?: ICreatedProduct
+  onFinish: () => void
+}) => {
+  return (
+    <Spin tip="Creating..." spinning={isLoading}>
+      <Form
+        labelCol={{ span: 4 }}
+        wrapperCol={{ span: 14 }}
+        layout="horizontal"
+        style={{ maxWidth: 600 }}
+        initialValues={{ remember: true }}
+        onFinish={onFinish}
+        autoComplete="off"
+      >
+        <Form.Item
+          label="Title"
+          name="title"
+          initialValue={initialValues?.title || ""}
+          rules={[{ required: true, message: "Please input title!" }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          label="Description"
+          name="description"
+          initialValue={initialValues?.description || ""}
+          rules={[{ required: true, message: "Please input description!" }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          label="Price"
+          name="price"
+          initialValue={initialValues?.price || ""}
+          rules={[{ required: true, message: "Please input price!" }]}
+        >
+          <InputNumber addonAfter="$" />
+        </Form.Item>
+        <Form.Item
+          label="Published"
+          name="published"
+          valuePropName="checked"
+          initialValue={!!initialValues?.description}
+        >
+          <Switch />
+        </Form.Item>
+        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+          <Button type="primary" htmlType="submit" loading={isLoading}>
+            {initialValues ? "Save" : "Create"}
+          </Button>
+        </Form.Item>
+      </Form>
+    </Spin>
+  )
+}
+
+export default ProductForm

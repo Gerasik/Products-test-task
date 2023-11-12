@@ -3,12 +3,12 @@ import type { PayloadAction } from "@reduxjs/toolkit"
 import { ICreatedProduct, IProduct } from "../../types/product"
 import { productApi } from "../../services/product"
 
-export interface CounterState {
+export interface ProductState {
   products: IProduct[]
   createdProducts: ICreatedProduct[]
 }
 
-const initialState: CounterState = {
+const initialState: ProductState = {
   products: [],
   createdProducts: [],
 }

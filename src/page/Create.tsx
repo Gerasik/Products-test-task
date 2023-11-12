@@ -13,16 +13,41 @@ import { useAddProductMutation } from "../services/product"
 import { ICreatedProduct } from "../types/product"
 import { useAppDispatch } from "../hooks/store"
 import { addCreatedProduct } from "../features/product/productSlice"
+import { useParams } from "react-router-dom"
+import { useSelector } from "react-redux"
+import { RootState } from "../store"
+import { useEffect, useState } from "react"
 
 const { Title } = Typography
 
 const Create = () => {
   const dispatch = useAppDispatch()
+  const { id } = useParams<{ id: string }>()
+  console.log("🚀 ~ file: Create.tsx:26 ~ Create ~ id:", id)
+  const createdProducts = useSelector(
+    (state: RootState) => state.persistedReducer.product.createdProducts
+  )
+
+  const [initialValues, setInitialValues] = useState<ICreatedProduct | null>(
+    null
+  )
+
+  useEffect(() => {
+    if (id) {
+      const item = createdProducts.find((i) => i.id === +id)
+      if (item) {
+        console.log("🚀 ~ file: Create.tsx:38 ~ useEffect ~ item:", item)
+        setInitialValues(initialValues)
+      }
+    }
+  }, [createdProducts, id, initialValues])
+
   const openNotification = (title: string) => {
     notification.open({
       message: `Product ${title} has been created`,
     })
   }
+
   const [create, { isLoading }] = useAddProductMutation()
 
   const onFinish = async (
@@ -71,6 +96,7 @@ const Create = () => {
           <Form.Item
             label="Title"
             name="title"
+            initialValue={initialValues?.title || ""}
             rules={[{ required: true, message: "Please input title!" }]}
           >
             <Input />
