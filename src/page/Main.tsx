@@ -1,7 +1,7 @@
 import React from "react"
 import { Layout, Space } from "antd"
 import { Outlet } from "react-router-dom"
-import { PAGE_PRODUCTS } from "../common/constants"
+import { PAGE_CREATE, PAGE_PRODUCTS } from "../common/constants"
 import HeaderNavLink from "../Components/NavLink"
 
 const { Header, Content, Footer } = Layout
@@ -21,6 +21,10 @@ const Main: React.FC = () => {
           <HeaderNavLink
             to={`/${PAGE_PRODUCTS}`}
             title="Products"
+          ></HeaderNavLink>
+          <HeaderNavLink
+            to={`/${PAGE_CREATE}`}
+            title="Add Product"
           ></HeaderNavLink>
         </Space>
       </Header>

@@ -1,7 +1,4 @@
-import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import { IProduct } from "../types/product"
-import { getProduct } from "../services"
 import {
   Flex,
   Skeleton,
@@ -9,77 +6,57 @@ import {
   Typography,
   Rate,
   Statistic,
-  Breadcrumb,
+  Button,
 } from "antd"
 import { LikeOutlined, DollarOutlined } from "@ant-design/icons"
+import { useGetProductByIDQuery } from "../services/product"
 
 const { Title, Text } = Typography
 
 const Item = () => {
   const { id } = useParams<{ id: string }>()
+  const { data, isLoading } = useGetProductByIDQuery(String(id))
+
   const navigate = useNavigate()
 
-  const [item, setItem] = useState<IProduct | null>(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    getData()
-    async function getData() {
-      if (id) {
-        setLoading(true)
-        try {
-          const newData = await getProduct(+id)
-          console.log("🚀 ~ file: Product.tsx:13 ~ getData ~ newData:", newData)
-          setItem(newData)
-          setLoading(false)
-        } catch (error) {
-          console.error(error)
-          setLoading(false)
-        }
-      }
-    }
-  }, [id])
-
-  if (loading) {
+  if (isLoading) {
     return <Skeleton active></Skeleton>
   }
 
-  if (!item) {
+  if (!data) {
     return <p>Item not found</p>
   }
 
   return (
     <>
-      <Breadcrumb>
-        <Breadcrumb.Item onClick={() => navigate(-1)}>
-          <p style={{ cursor: "pointer" }}>{"< Back"}</p>
-        </Breadcrumb.Item>
-      </Breadcrumb>
+      <Button type="dashed" onClick={() => navigate(-1)}>
+        {"< Back"}
+      </Button>
       <Flex gap="middle">
         <Flex gap="middle" vertical>
           <Flex justify="space-between" gap="large">
-            <Title>{item.title}</Title>
+            <Title>{data.title}</Title>
             <Rate
               style={{ flex: "1 0 auto", paddingTop: "32px" }}
               allowHalf
-              defaultValue={item.rating.rate}
+              defaultValue={data.rating.rate}
             />
           </Flex>
-          <Text type="secondary">{item.description}</Text>
+          <Text type="secondary">{data.description}</Text>
           <Flex gap="large" align="end" justify="end">
             <Statistic
               title="Feedback"
-              value={item.rating.count}
+              value={data.rating.count}
               prefix={<LikeOutlined />}
             />
             <Statistic
               title="Price"
-              value={item.price}
+              value={data.price}
               prefix={<DollarOutlined />}
             />
           </Flex>
         </Flex>
-        <Image width="50%" src={item.image} />
+        <Image width="50%" src={data.image} />
       </Flex>
     </>
   )
